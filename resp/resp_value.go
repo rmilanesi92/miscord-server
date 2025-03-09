@@ -15,3 +15,8 @@ func NewError(err error) RespValue {
 func NewErrorFromMsg(msg string) RespValue {
     return RespValue{ Kind: ERR, Value: msg}
 }
+
+// Simplified RespValue string constructor
+func NewString(msg string) RespValue {
+    return RespValue{ Kind: STR, Value: msg}
+}

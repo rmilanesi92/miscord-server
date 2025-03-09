@@ -46,7 +46,18 @@ func (self *RespReader) Read() RespValue {
         return NewError(err)
     }
     switch kind {
+    case STR:
+        return self.readString()
     default:
         return NewErrorFromMsg("ERR unsupported type: " + string(kind))
     }
+}
+
+// Read simple string from buffer
+func (self *RespReader) readString() RespValue {
+    value, err := self.readLine()
+    if err != nil {
+        return NewErrorFromMsg("ERR reading string")
+    }
+    return NewString(value)
 }
