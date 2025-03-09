@@ -50,6 +50,8 @@ func (self *RespReader) Read() RespValue {
         return self.readString()
     case BULK_STR:
         return self.readBulkString()
+    case INT:
+        return self.readInt()
     default:
         return NewErrorFromMsg("ERR unsupported type: " + string(kind))
     }
@@ -82,4 +84,18 @@ func (self *RespReader) readBulkString() RespValue {
     }
 
     return NewBulkString(string(value))
+}
+
+// Read Integer from buffer
+func (self *RespReader) readInt() RespValue {
+    value, err := self.readLine()
+    if err != nil {
+        return NewError(err)
+    }
+
+    parsed, err := strconv.Atoi(value)
+    if err != nil {
+        return NewError(err)
+    }
+    return NewInteger(parsed)
 }

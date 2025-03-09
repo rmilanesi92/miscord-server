@@ -25,3 +25,8 @@ func NewString(msg string) RespValue {
 func NewBulkString(msg string) RespValue {
     return RespValue{ Kind: BULK_STR, Value: msg}
 }
+
+// Simplified RespValue int constructor
+func NewInteger(num int) RespValue {
+    return RespValue{ Kind: INT, Value: num}
+}

@@ -23,6 +23,15 @@ func TestRead(t *testing.T) {
             input: "$6\r\nte\r\nst\r\n",
             expected: RespValue{ Kind: BULK_STR, Value: "te\r\nst"},
         },
+        {
+            name: "Positive Integer",
+            input: ":+892\r\n",
+            expected: RespValue{ Kind: INT, Value: 892},
+        },
+        {
+            name: "Negative Integer",
+            input: ":-144\r\n",
+            expected: RespValue{ Kind: INT, Value: -144}, },
     }
      for _, tc := range cases {
         t.Run(tc.name, func(t *testing.T) { 
