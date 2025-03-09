@@ -48,6 +48,8 @@ func (self *RespReader) Read() RespValue {
     switch kind {
     case STR:
         return self.readString()
+    case BULK_STR:
+        return self.readBulkString()
     default:
         return NewErrorFromMsg("ERR unsupported type: " + string(kind))
     }
@@ -60,4 +62,24 @@ func (self *RespReader) readString() RespValue {
         return NewErrorFromMsg("ERR reading string")
     }
     return NewString(value)
+}
+
+// Read bulk string from buffer
+func (self *RespReader) readBulkString() RespValue {
+    length, err := self.readIntByte()
+    if err != nil {
+        return NewError(err)
+    }
+
+    value := make([]byte, length)
+    nWritten, err := io.ReadFull(self.reader, value)
+    if err != nil {
+        return NewError(err)
+    }
+
+    if nWritten != length {
+        return NewErrorFromMsg("ERR Invalid format for bulk string")
+    }
+
+    return NewBulkString(string(value))
 }

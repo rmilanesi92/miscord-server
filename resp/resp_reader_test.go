@@ -18,6 +18,11 @@ func TestRead(t *testing.T) {
             input: "+test\r\n",
             expected: RespValue{ Kind: STR, Value: "test"},
         },
+        {
+            name: "Bulk String",
+            input: "$6\r\nte\r\nst\r\n",
+            expected: RespValue{ Kind: BULK_STR, Value: "te\r\nst"},
+        },
     }
      for _, tc := range cases {
         t.Run(tc.name, func(t *testing.T) { 

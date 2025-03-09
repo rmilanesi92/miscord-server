@@ -20,3 +20,8 @@ func NewErrorFromMsg(msg string) RespValue {
 func NewString(msg string) RespValue {
     return RespValue{ Kind: STR, Value: msg}
 }
+
+// Simplified RespValue string constructor
+func NewBulkString(msg string) RespValue {
+    return RespValue{ Kind: BULK_STR, Value: msg}
+}
