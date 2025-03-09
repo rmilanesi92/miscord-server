@@ -31,7 +31,62 @@ func TestRead(t *testing.T) {
         {
             name: "Negative Integer",
             input: ":-144\r\n",
-            expected: RespValue{ Kind: INT, Value: -144}, },
+            expected: RespValue{ Kind: INT, Value: -144}, 
+        },
+        {
+            name: "Negative Integer",
+            input: ":-144\r\n",
+            expected: RespValue{ Kind: INT, Value: -144}, 
+        },
+        {
+            name: "Negative Integer",
+            input: ":-144\r\n",
+            expected: RespValue{ Kind: INT, Value: -144}, 
+        },
+        {
+            name: "Array of Bulk String",
+            input: "*2\r\n$3\r\nthe\r\n$5\r\ntrial\r\n",
+            expected: RespValue{ 
+                Kind: ARRAY, 
+                Value: []RespValue {
+                    {
+                        Kind: BULK_STR,
+                        Value: "the",
+                    },
+                    {
+                        Kind: BULK_STR,
+                        Value: "trial",
+                    },
+                },     
+            }, 
+        },
+        {
+            name: "Array of int",
+            input: "*3\r\n:2\r\n:-1\r\n:8\r\n",
+            expected: RespValue{ 
+                Kind: ARRAY, 
+                Value: []RespValue {
+                    {
+                        Kind: INT,
+                        Value: 2,
+                    },
+                    {
+                        Kind: INT,
+                        Value: -1,
+                    },
+                    {
+                        Kind: INT,
+                        Value: 8,
+                    },
+                },     
+            }, 
+        },
+        {
+            name: "Empty Array",
+            input: "*0\r\n",
+            expected: RespValue{ Kind: ARRAY, Value: []RespValue {}}, 
+        },
+
     }
      for _, tc := range cases {
         t.Run(tc.name, func(t *testing.T) { 

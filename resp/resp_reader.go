@@ -52,6 +52,8 @@ func (self *RespReader) Read() RespValue {
         return self.readBulkString()
     case INT:
         return self.readInt()
+    case ARRAY:
+        return self.readArray()
     default:
         return NewErrorFromMsg("ERR unsupported type: " + string(kind))
     }
@@ -83,6 +85,7 @@ func (self *RespReader) readBulkString() RespValue {
         return NewErrorFromMsg("ERR Invalid format for bulk string")
     }
 
+    self.readLine()
     return NewBulkString(string(value))
 }
 
@@ -98,4 +101,22 @@ func (self *RespReader) readInt() RespValue {
         return NewError(err)
     }
     return NewInteger(parsed)
+}
+
+// Read Array from buffer
+func (self *RespReader) readArray() RespValue {
+    length, err := self.readIntByte()
+    if err != nil {
+        return NewError(err)
+    }
+
+    list := make([]RespValue, 0)
+    for i := 0; i < length; i++ {
+        elem := self.Read()
+        if elem.Kind == ERR {
+            return elem
+        }
+        list = append(list, elem)
+    }
+    return NewArray(list)
 }

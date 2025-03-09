@@ -30,3 +30,8 @@ func NewBulkString(msg string) RespValue {
 func NewInteger(num int) RespValue {
     return RespValue{ Kind: INT, Value: num}
 }
+
+// Simplified RespValue int constructor
+func NewArray(list []RespValue) RespValue {
+    return RespValue{ Kind: ARRAY, Value: list}
+}
