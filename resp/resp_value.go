@@ -35,3 +35,29 @@ func NewInteger(num int) RespValue {
 func NewArray(list []RespValue) RespValue {
     return RespValue{ Kind: ARRAY, Value: list}
 }
+
+// Convert the RespValue in a byte[] of its resp string representation
+func (v *RespValue) ToBytes() []byte {
+    switch(v.Kind) {
+    case STR:
+        return v.convertStr()
+    default:
+        return []byte{}
+    }
+}
+
+// Convert a str RespValue in byte[]
+// In case of error an empty byte array is returned
+func (v *RespValue) convertStr() []byte {
+    var bytes []byte
+    realValue, ok := v.Value.(string)
+    if !ok {
+        return []byte{}
+    }
+    bytes = append(bytes, v.Kind)
+    bytes = append(bytes, realValue...)
+    bytes = append(bytes, '\r', '\n')
+    return bytes
+}
+
+
