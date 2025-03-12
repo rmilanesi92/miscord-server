@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net"
-	"os"
+    "github.com/rmilanesi92/miscord-server/resp"
 )
 
 // Server struct defines a server with a port number
@@ -36,24 +35,15 @@ func (server Server) Start() {
     // Ensure the connection close at the end of the scope
     defer connection.Close()
 
-    for {
-        // Create a buffer to store inputs
-        buffer := make([]byte, 1024)
-        
-        // Reading data from the connection into the buffer
-        _, err := connection.Read(buffer)
-        if err != nil {
+    for { 
+        // Create the RESP reader
+        reader := resp.NewRespReader(connection)
 
-            // Break the loop if the connection is closed
-            if err == io.EOF {
-                break
-            }
-            fmt.Println("ERR ", err.Error())
-            os.Exit(1)
-        }
+        // Read inputs
+        value := reader.Read()
 
-        // Write a response back to the client
-        connection.Write([]byte("+OK\r\n"))
+        // Write the RespValue response to client
+        connection.Write(value.ToBytes())
     }
 
 }
