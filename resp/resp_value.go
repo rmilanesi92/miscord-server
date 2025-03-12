@@ -39,12 +39,15 @@ func NewArray(list []RespValue) RespValue {
 }
 
 // Convert the RespValue in a byte[] of its resp string representation
+// In case of error an empty byte array is returned
 func (v *RespValue) ToBytes() []byte {
     switch(v.Kind) {
     case STR, ERR:
         return v.convertStr()
     case BULK_STR:
         return v.convertBulkStr()
+    case ARRAY:
+        return v.convertArray()
     default:
         return []byte{}
     }
@@ -77,5 +80,22 @@ func (v *RespValue) convertBulkStr() []byte {
     bytes = append(bytes, '\r', '\n')
     bytes = append(bytes, realValue...)
     bytes = append(bytes, '\r', '\n')
+    return bytes
+}
+
+// Convert an array RespValue in byte[]
+// In case of error an empty byte array is returned
+func (v *RespValue) convertArray() []byte {
+    var bytes []byte
+    realValue, ok := v.Value.([]RespValue)
+    if !ok {
+        return []byte{}
+    }
+    bytes = append(bytes, v.Kind)
+    bytes = append(bytes, strconv.Itoa(len(realValue))...)
+    bytes = append(bytes, '\r', '\n')
+    for _, value := range realValue {
+        bytes = append(bytes, value.ToBytes()...)
+    }
     return bytes
 }
