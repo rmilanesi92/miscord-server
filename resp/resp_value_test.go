@@ -17,12 +17,22 @@ func Test_ToBytes(t *testing.T) {
             },
             expected: "+SimpleString\r\n",
         },
+        {
+            name: "Error",
+            input: RespValue{
+                Kind: ERR,
+                Value: "ERR test example",
+            },
+            expected: "-ERR test example\r\n",
+        },
     }
     for _, tc := range cases {
         t.Run(tc.name, func(t *testing.T) {
             // Execute the method
-            actual := tc.input.ToBytes()
+            bytes := tc.input.ToBytes()
 
+            actual := string(bytes)
+            
             if string(actual) != tc.expected {
                 t.Errorf(
                     "Unexpected result.\nExpected: %+v\nActual: %+v",

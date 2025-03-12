@@ -39,7 +39,7 @@ func NewArray(list []RespValue) RespValue {
 // Convert the RespValue in a byte[] of its resp string representation
 func (v *RespValue) ToBytes() []byte {
     switch(v.Kind) {
-    case STR:
+    case STR, ERR:
         return v.convertStr()
     default:
         return []byte{}
@@ -59,5 +59,3 @@ func (v *RespValue) convertStr() []byte {
     bytes = append(bytes, '\r', '\n')
     return bytes
 }
-
-
