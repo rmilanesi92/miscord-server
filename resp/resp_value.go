@@ -1,5 +1,7 @@
 package resp
 
+import "strconv"
+
 // Represent a RESP value
 type RespValue struct {
     Kind byte
@@ -41,6 +43,8 @@ func (v *RespValue) ToBytes() []byte {
     switch(v.Kind) {
     case STR, ERR:
         return v.convertStr()
+    case BULK_STR:
+        return v.convertBulkStr()
     default:
         return []byte{}
     }
@@ -55,6 +59,22 @@ func (v *RespValue) convertStr() []byte {
         return []byte{}
     }
     bytes = append(bytes, v.Kind)
+    bytes = append(bytes, realValue...)
+    bytes = append(bytes, '\r', '\n')
+    return bytes
+}
+
+// Convert a bulk str RespValue in byte[]
+// In case of error an empty byte array is returned
+func (v *RespValue) convertBulkStr() []byte {
+    var bytes []byte
+    realValue, ok := v.Value.(string)
+    if !ok {
+        return []byte{}
+    }
+    bytes = append(bytes, v.Kind)
+    bytes = append(bytes, strconv.Itoa(len(realValue))...)
+    bytes = append(bytes, '\r', '\n')
     bytes = append(bytes, realValue...)
     bytes = append(bytes, '\r', '\n')
     return bytes

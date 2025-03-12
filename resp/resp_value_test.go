@@ -25,6 +25,14 @@ func Test_ToBytes(t *testing.T) {
             },
             expected: "-ERR test example\r\n",
         },
+        {
+            name: "Bulk String",
+            input: RespValue{
+                Kind: BULK_STR,
+                Value: "A\r\nBulk\r\nString",
+            },
+            expected: "$15\r\nA\r\nBulk\r\nString\r\n",
+        },
     }
     for _, tc := range cases {
         t.Run(tc.name, func(t *testing.T) {
