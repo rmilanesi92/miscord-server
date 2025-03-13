@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
     "github.com/rmilanesi92/miscord-server/resp"
+    "github.com/rmilanesi92/miscord-server/command"
 )
 
 // Server struct defines a server with a port number
@@ -41,9 +42,12 @@ func (server Server) Start() {
 
         // Read inputs
         value := reader.Read()
+       
+        // Handle Command
+        commandResponse := command.Handle(value) 
 
         // Write the RespValue response to client
-        connection.Write(value.ToBytes())
+        connection.Write(commandResponse.ToBytes())
     }
 
 }
