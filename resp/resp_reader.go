@@ -55,7 +55,7 @@ func (self *RespReader) Read() RespValue {
     case ARRAY:
         return self.readArray()
     default:
-        return NewErrorFromMsg("ERR unsupported type: " + string(kind))
+        return NewErrorFromMsg("Unsupported type: " + string(kind))
     }
 }
 
@@ -63,7 +63,7 @@ func (self *RespReader) Read() RespValue {
 func (self *RespReader) readString() RespValue {
     value, err := self.readLine()
     if err != nil {
-        return NewErrorFromMsg("ERR reading string")
+        return NewErrorFromMsg("Invalid format reading string")
     }
     return NewString(value)
 }
@@ -82,7 +82,7 @@ func (self *RespReader) readBulkString() RespValue {
     }
 
     if nWritten != length {
-        return NewErrorFromMsg("ERR Invalid format for bulk string")
+        return NewErrorFromMsg("Invalid format for bulk string")
     }
 
     self.readLine()

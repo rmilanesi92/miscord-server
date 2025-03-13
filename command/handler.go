@@ -19,13 +19,13 @@ var CommandList map[string]Command
 // Handle command parsing and execution
 func Handle(input resp.RespValue) resp.RespValue {
     if input.Kind != resp.ARRAY {
-        return resp.NewErrorFromMsg("ERR array format expected")
+        return resp.NewErrorFromMsg("Array format expected")
     } 
 
     parsedInput, ok := input.Value.([]resp.RespValue)
     
     if !ok || len(parsedInput) == 0 {
-        return resp.NewErrorFromMsg("ERR command format issue")
+        return resp.NewErrorFromMsg("Command format issue")
     }
    
     commandName := parsedInput[0].Value.(string)
@@ -36,7 +36,7 @@ func Handle(input resp.RespValue) resp.RespValue {
     command, ok := CommandList[commandName]
     if !ok {
         return resp.NewErrorFromMsg(
-            fmt.Sprintf("ERR invalid command: %s", commandName),
+            fmt.Sprintf("Invalid command: %s", commandName),
         )
     }
 
