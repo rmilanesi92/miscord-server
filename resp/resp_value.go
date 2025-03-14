@@ -38,6 +38,11 @@ func NewArray(list []RespValue) RespValue {
     return RespValue{ Kind: ARRAY, Value: list}
 }
 
+// Simplified RespValue int constructor
+func Null() RespValue {
+    return RespValue{ Kind: NULL}
+}
+
 // Convert the RespValue in a byte[] of its resp string representation
 // In case of error an empty byte array is returned
 func (v *RespValue) ToBytes() []byte {
@@ -48,6 +53,8 @@ func (v *RespValue) ToBytes() []byte {
         return v.convertBulkStr()
     case ARRAY:
         return v.convertArray()
+    case NULL:
+        return v.convertNull()
     default:
         return []byte{}
     }
@@ -99,3 +106,13 @@ func (v *RespValue) convertArray() []byte {
     }
     return bytes
 }
+
+// Convert a Null RespValue in byte[]
+func (v *RespValue) convertNull() []byte {
+    var bytes []byte
+    bytes = append(bytes, v.Kind)
+    bytes = append(bytes, '\r', '\n')
+    return bytes
+}
+
+
