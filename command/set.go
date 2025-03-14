@@ -12,7 +12,7 @@ func set(args []resp.RespValue) resp.RespValue {
    } 
 
    key := args[0].Value.(string)
-   value := args[0].Value.(string)
+   value := args[1].Value.(string)
 
    data.DBSetMutex.Lock()
    data.DBSet[key] = value
