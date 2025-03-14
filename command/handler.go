@@ -14,7 +14,7 @@ type Command struct {
 }
 
 // Will hold the command list
-var CommandList map[string]Command
+var CommandList = make(map[string]Command)
 
 // Handle command parsing and execution
 func Handle(input resp.RespValue) resp.RespValue {
@@ -41,4 +41,9 @@ func Handle(input resp.RespValue) resp.RespValue {
     }
 
     return command.Exec(args)
+}
+
+// Register a Command instance in CommandList map
+func RegisterCommand(cmd Command) {
+    CommandList[strings.ToUpper(cmd.Name)] = cmd
 }
