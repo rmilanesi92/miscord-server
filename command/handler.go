@@ -47,3 +47,10 @@ func Handle(input resp.RespValue) resp.RespValue {
 func RegisterCommand(cmd Command) {
     CommandList[strings.ToUpper(cmd.Name)] = cmd
 }
+
+// Register a List of Command instance in CommandList map
+func RegisterCommandList(list []Command) {
+    for _, cmd := range list {
+        CommandList[strings.ToUpper(cmd.Name)] = cmd
+    }
+}
